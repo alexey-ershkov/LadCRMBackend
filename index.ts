@@ -1,7 +1,8 @@
 import express from "express";
 import {default as clientRouter} from './routes/client';
-import {default as subRouter} from './routes/sub'
-import mongoose from 'mongoose'
+import {default as subRouter} from './routes/sub';
+import {default as singleVisitRouter} from './routes/singleVisit';
+import mongoose from 'mongoose';
 
 const app = express();
 const allowOrigin = 'http://localhost:3000'
@@ -23,8 +24,9 @@ app.use((req, res, next) => {
     }
 })
 
-app.use(clientRouter)
-app.use(subRouter)
+app.use(clientRouter);
+app.use(subRouter);
+app.use(singleVisitRouter);
 
 const PORT = process.env.PORT || 3001;
 mongoose.connect(dbUrl, {
