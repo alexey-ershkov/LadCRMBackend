@@ -1,16 +1,17 @@
 import Router from 'express';
 import bodyParser from "body-parser";
-import ClientDbModel from "../dbModels/clientDbModel";
+import SubTypeDbModel from "../dbModels/subTypeDbModel";
 
 const router = Router();
 
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({extended:true}))
 
-router.post('/addClient', async (req, resp) => {
-    const client = req.body
-    const dbClient = new ClientDbModel(client)
-    dbClient.save().then(() => {
+
+router.post('/addSub', async (req, resp) => {
+    const sub = req.body;
+    const dbSubType = new SubTypeDbModel(sub);
+    dbSubType.save().then(() => {
         resp.sendStatus(200);
     })
         .catch(err => {

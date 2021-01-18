@@ -1,7 +1,7 @@
 import express from "express";
-import {default as clientRouter} from "./routes/client";
+import {default as clientRouter} from './routes/client';
+import {default as subRouter} from './routes/sub'
 import mongoose from 'mongoose'
-import clientDbModel from "./dbModels/clientDbModel";
 
 const app = express();
 const allowOrigin = 'http://localhost:3000'
@@ -15,21 +15,16 @@ app.use(function (req, res, next) {
     next();
 });
 
-app.get('/', async (req, resp) => {
-    let model = new clientDbModel({
-        name:'a',
-        surname:'b',
-        lastName:'c',
-        dateOfBirth: new Date(),
-        orderNumber: 112415,
-        created: new Date(),
-        phone: '3y158t3185'
-    })
-
-    await model.save()
-    resp.sendStatus(200)
+app.use((req, res, next) => {
+    if (req.method === 'OPTIONS') {
+        return res.sendStatus(200);
+    } else {
+        next();
+    }
 })
+
 app.use(clientRouter)
+app.use(subRouter)
 
 const PORT = process.env.PORT || 3001;
 mongoose.connect(dbUrl, {
