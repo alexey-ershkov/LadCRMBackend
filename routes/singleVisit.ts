@@ -7,6 +7,10 @@ const router = Router();
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({extended:true}))
 
+router.get('/singleVisitTypes', async (req, res) => {
+    const visitTypes = await SingleVisitTypeDbModel.find({});
+    res.send(visitTypes);
+})
 
 router.post('/addSingleVisit', async (req, resp) => {
     const singleVisitType = req.body;

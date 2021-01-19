@@ -7,6 +7,10 @@ const router = Router();
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({extended:true}))
 
+router.get('/subTypes', async (req, res) => {
+    const subTypes = await SubTypeDbModel.find({});
+    res.send(subTypes);
+})
 
 router.post('/addSub', async (req, resp) => {
     const sub = req.body;

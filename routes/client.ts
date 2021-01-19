@@ -12,6 +12,11 @@ router.get('/clients', async (req, res) => {
     res.send(clients);
 })
 
+router.get('/client/:id', async (req, res) => {
+    const client = await ClientDbModel.findById(req.params.id);
+    res.send(client);
+})
+
 router.post('/addClient', async (req, resp) => {
     const client = req.body
     const dbClient = new ClientDbModel(client)
