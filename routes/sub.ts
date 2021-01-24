@@ -6,8 +6,7 @@ import {SubTypeDbModel} from "../dbModels/subTypeDbModel";
 import {SubscriptionDbModel} from '../dbModels/subscriptionDbModel'
 import SubVisit from "../models/subVisit";
 import VisitJournalDbModel from "../dbModels/visitJournalDbModel";
-import Subscription from "../models/subscription";
-import Journal from "../models/journal";
+
 
 const router = Router();
 
@@ -48,14 +47,19 @@ router.post('/saveSubVisit', async (req, res) => {
 
     let sub = await SubscriptionDbModel.findById(visit.subId);
 
-    if (!sub.isInfinite) {
-        sub.visitsLeft -= 1;
-    }
 
     const journalVisit = new VisitJournalDbModel({
         isSub: true,
         subInfo: sub
     })
+
+    if (!sub.isInfinite) {
+        sub.visitsLeft -= 1;
+    }
+
+    if (sub.visitsLeft === 0) {
+        sub.isArchived = true;
+    }
 
     const subPromise = sub.save();
     const visitPromise = journalVisit.save();
@@ -92,6 +96,11 @@ router.post('/addSub', async (req, resp) => {
             resp.status(500)
         })
 
+})
+
+router.get('/archive', async (req,res) => {
+    const archived = await SubscriptionDbModel.find({'isArchived': true});
+    res.send(archived);
 })
 
 export default router;

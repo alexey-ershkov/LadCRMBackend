@@ -2,6 +2,7 @@ import express from "express";
 import {default as clientRouter} from './routes/client';
 import {default as subRouter} from './routes/sub';
 import {default as singleVisitRouter} from './routes/singleVisit';
+import {default as journalRouter} from './routes/journal';
 import mongoose from 'mongoose';
 
 const app = express();
@@ -27,11 +28,14 @@ app.use((req, res, next) => {
 app.use(clientRouter);
 app.use(subRouter);
 app.use(singleVisitRouter);
+app.use(journalRouter);
 
 const PORT = process.env.PORT || 3001;
 mongoose.connect(dbUrl, {
     useUnifiedTopology: true,
-    useNewUrlParser: true
+    useNewUrlParser: true,
+    useFindAndModify:false,
+    useCreateIndex: true
 }).then(() => app.listen(PORT, async () => {
     console.log(`Server started on  http://localhost:${PORT}`)
 }))

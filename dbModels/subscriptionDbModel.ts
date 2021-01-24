@@ -11,6 +11,7 @@ interface ISub extends Document {
     uuid: number
     dateFrom: Date,
     dateTo: Date,
+    isArchived: boolean,
     isInfinite: boolean,
     visitsLeft?: number
 }
@@ -22,12 +23,17 @@ const subDbSchema = new Schema({
         type: Number,
         unique: true
     },
+    isArchived: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
     dateFrom: {
         type: Date,
         required: true
     },
     dateTo: {
-        type:Date,
+        type: Date,
         required: true
     },
     isInfinite: Boolean,
@@ -35,6 +41,6 @@ const subDbSchema = new Schema({
 
 }, {collection: 'Subscriptions'})
 
-const SubscriptionDbModel = model<ISub>('Subscription',subDbSchema)
+const SubscriptionDbModel = model<ISub>('Subscription', subDbSchema)
 
 export {subDbSchema, SubscriptionDbModel}

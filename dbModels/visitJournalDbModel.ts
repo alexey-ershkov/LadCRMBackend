@@ -11,6 +11,7 @@ interface IJournal extends Document {
         visitName: string,
         cost: number
     },
+    isArchived:boolean,
     isSub: boolean,
     subInfo: {
         client: Client,
