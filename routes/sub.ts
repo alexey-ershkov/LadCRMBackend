@@ -76,7 +76,7 @@ router.post('/saveSubVisit', async (req, res) => {
 })
 
 router.get('/getUserSubs/:id', async (req, res) => {
-    const subs = await SubscriptionDbModel.find({'client._id': req.params.id})
+    const subs = await SubscriptionDbModel.find({'client._id': req.params.id, 'isArchived': false});
     res.send(subs);
 })
 
@@ -98,7 +98,7 @@ router.post('/addSub', async (req, resp) => {
 
 })
 
-router.get('/archive', async (req,res) => {
+router.get('/archive', async (req, res) => {
     const archived = await SubscriptionDbModel.find({'isArchived': true});
     res.send(archived);
 })

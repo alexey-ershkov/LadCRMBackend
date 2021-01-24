@@ -8,7 +8,7 @@ router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({extended:true}))
 
 router.get('/journal', async (req,res) => {
-    const journal = await VisitJournalDbModel.find({});
+    const journal = await VisitJournalDbModel.find({}).sort({'visitTime':-1});;
     res.send(journal)
 })
 
