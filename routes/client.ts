@@ -17,6 +17,13 @@ router.get('/client/:id', async (req, res) => {
     res.send(client);
 })
 
+router.get('/clients/search/:search', async (req, res) => {
+    const regex = new RegExp(req.params.search, 'ig');
+
+    const found = await ClientDbModel.find({$or:[{'name': regex}, {'surname':regex}, {'lastName':regex}]});
+    res.send(found);
+})
+
 router.post('/addClient', async (req, resp) => {
     const client = req.body
     const dbClient = new ClientDbModel(client)

@@ -8,7 +8,8 @@ import subType from "../models/subType";
 interface ISub extends Document {
     client: Client,
     subInfo: subType,
-    uuid: number
+    uuid: number,
+    uuidStr: string,
     dateFrom: Date,
     dateTo: Date,
     isArchived: boolean,
@@ -22,6 +23,9 @@ const subDbSchema = new Schema({
     uuid: {
         type: Number,
         unique: true
+    },
+    uuidStr: {
+      type: String
     },
     isArchived: {
         type: Boolean,

@@ -27,6 +27,7 @@ router.post('/sellSub', async (req, res) => {
         client,
         subInfo,
         uuid: sellInfo.uuid,
+        uuidStr: sellInfo.uuid.toString(),
         dateFrom: Date.now(),
         dateTo: Date.now() + subInfo.daysCount * 24 * 60 * 60 * 1000,
         isInfinite: subInfo.isInfinite,
@@ -83,6 +84,11 @@ router.get('/getUserSubs/:id', async (req, res) => {
 router.get('/sub/:id', async (req, res) => {
     const sub = await SubscriptionDbModel.findById(req.params.id);
     res.send(sub);
+})
+
+router.get('/subs/search/:search', async (req, res) => {
+    const found = await SubscriptionDbModel.find({'uuidStr': new RegExp(req.params.search, 'ig'), 'isArchived': false});
+    res.send(found);
 })
 
 router.post('/addSub', async (req, resp) => {
