@@ -6,8 +6,8 @@ import {default as journalRouter} from './routes/journal';
 import mongoose from 'mongoose';
 
 const app = express();
-const allowOrigin = 'http://localhost:3000'
-const dbUrl = 'mongodb://127.0.0.1:27017/LadCRM'
+const allowOrigin = 'http://localhost:3000';
+const dbUrl = process.env.MONGO_URL;
 
 app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', allowOrigin);
