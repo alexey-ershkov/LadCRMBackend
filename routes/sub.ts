@@ -3,13 +3,16 @@ import bodyParser from "body-parser";
 import SubscriptionSell from "../models/subscriptionSell";
 import {ClientDbModel} from "../dbModels/clientDbModel";
 import {SubTypeDbModel} from "../dbModels/subTypeDbModel";
-import SubscriptionDbModel from '../dbModels/subscriptionDbModel'
-import subscriptionDbModel from "../dbModels/subscriptionDbModel";
+import {SubscriptionDbModel} from '../dbModels/subscriptionDbModel'
+import SubVisit from "../models/subVisit";
+import VisitJournalDbModel from "../dbModels/visitJournalDbModel";
+import Subscription from "../models/subscription";
+import Journal from "../models/journal";
 
 const router = Router();
 
 router.use(bodyParser.json());
-router.use(bodyParser.urlencoded({extended:true}))
+router.use(bodyParser.urlencoded({extended: true}))
 
 router.get('/subTypes', async (req, res) => {
     const subTypes = await SubTypeDbModel.find({});
@@ -24,8 +27,9 @@ router.post('/sellSub', async (req, res) => {
     const sub = new SubscriptionDbModel({
         client,
         subInfo,
+        uuid: sellInfo.uuid,
         dateFrom: Date.now(),
-        dateTo: Date.now() + subInfo.daysCount*24*60*60*1000,
+        dateTo: Date.now() + subInfo.daysCount * 24 * 60 * 60 * 1000,
         isInfinite: subInfo.isInfinite,
         visitsLeft: subInfo.visitsCount
     })
@@ -39,13 +43,41 @@ router.post('/sellSub', async (req, res) => {
         })
 })
 
+router.post('/saveSubVisit', async (req, res) => {
+    const visit: SubVisit = req.body;
+
+    let sub = await SubscriptionDbModel.findById(visit.subId);
+
+    if (!sub.isInfinite) {
+        sub.visitsLeft -= 1;
+    }
+
+    const journalVisit = new VisitJournalDbModel({
+        isSub: true,
+        subInfo: sub
+    })
+
+    const subPromise = sub.save();
+    const visitPromise = journalVisit.save();
+
+    Promise.all([subPromise, visitPromise])
+        .then(() => {
+            res.sendStatus(200);
+        })
+        .catch(err => {
+            res.status(500).send(err);
+        })
+
+
+})
+
 router.get('/getUserSubs/:id', async (req, res) => {
     const subs = await SubscriptionDbModel.find({'client._id': req.params.id})
     res.send(subs);
 })
 
-router.get('/sub/:id', async (req,res) => {
-    const sub = await subscriptionDbModel.findById(req.params.id);
+router.get('/sub/:id', async (req, res) => {
+    const sub = await SubscriptionDbModel.findById(req.params.id);
     res.send(sub);
 })
 
