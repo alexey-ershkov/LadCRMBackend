@@ -1,6 +1,6 @@
 import Router from 'express';
 import bodyParser from "body-parser";
-import ClientDbModel from "../dbModels/clientDbModel";
+import {ClientDbModel} from "../dbModels/clientDbModel";
 
 const router = Router();
 

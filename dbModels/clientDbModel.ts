@@ -10,4 +10,6 @@ const clientSchema = new Schema({
     created: Date
 }, {collection: 'Clients'})
 
-export default model('clientModel',clientSchema)
+let ClientDbModel =  model('clientModel',clientSchema);
+
+export {ClientDbModel, clientSchema}

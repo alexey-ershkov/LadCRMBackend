@@ -5,4 +5,6 @@ const singleVisitScheme = new Schema({
     cost: Number
 }, {collection: 'SingleVisitTypes'});
 
-export default model('SingleVisitType', singleVisitScheme);
+let SingleVisitTypeDbModel = model('SingleVisitType', singleVisitScheme)
+
+export  {SingleVisitTypeDbModel, singleVisitScheme};
