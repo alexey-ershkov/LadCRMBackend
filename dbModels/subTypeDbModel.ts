@@ -1,4 +1,12 @@
-import {Schema, model} from 'mongoose'
+import {Schema, model, Document} from 'mongoose'
+
+interface ISubType extends Document{
+    subName: string,
+    isInfinite: boolean,
+    visitsCount: number,
+    daysCount: number,
+    cost: number
+}
 
 const SubTypeSchema = new Schema({
     subName: String,
@@ -8,4 +16,6 @@ const SubTypeSchema = new Schema({
     cost: Number
 }, {collection: 'SubTypes'})
 
-export default model('SubType',SubTypeSchema)
+const SubTypeDbModel = model<ISubType>('SubType',SubTypeSchema)
+
+export {SubTypeDbModel, SubTypeSchema};
