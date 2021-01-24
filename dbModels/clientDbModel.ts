@@ -5,6 +5,11 @@ const clientSchema = new Schema({
     surname:String,
     lastName:String,
     dateOfBirth: Date,
+    isChild: Boolean,
+    parentName:String,
+    parentSurname:String,
+    parentLastName:String,
+    parentDateOfBirth: Date,
     phone: String,
     orderNumber: Number,
     created: Date
