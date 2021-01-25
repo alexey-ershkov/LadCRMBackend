@@ -1,4 +1,5 @@
 export default interface SubVisit {
     client: string,
-    subId: string
+    subId: string,
+    visitTime: Date
 }

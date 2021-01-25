@@ -48,10 +48,10 @@ router.post('/saveSubVisit', async (req, res) => {
 
     let sub = await SubscriptionDbModel.findById(visit.subId);
 
-
     const journalVisit = new VisitJournalDbModel({
         isSub: true,
-        subInfo: sub
+        subInfo: sub,
+        visitTime: visit.visitTime
     })
 
     if (!sub.isInfinite) {
@@ -60,16 +60,20 @@ router.post('/saveSubVisit', async (req, res) => {
 
     if (sub.visitsLeft === 0) {
         sub.isArchived = true;
+        sub.save()
+            .catch(err => {
+                console.log(err);
+            })
     }
 
-    const subPromise = sub.save();
-    const visitPromise = journalVisit.save();
 
-    Promise.all([subPromise, visitPromise])
+
+        journalVisit.save()
         .then(() => {
             res.sendStatus(200);
         })
         .catch(err => {
+            console.log(err)
             res.status(500).send(err);
         })
 

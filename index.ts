@@ -6,7 +6,7 @@ import {default as journalRouter} from './routes/journal';
 import mongoose from 'mongoose';
 
 const app = express();
-const allowOrigin = 'https://ladcrm.netlify.app';
+const allowOrigin = process.env.ALLOW_URL;
 const dbUrl = process.env.MONGO_URL;
 
 app.use(function (req, res, next) {

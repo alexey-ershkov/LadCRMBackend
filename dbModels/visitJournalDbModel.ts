@@ -22,7 +22,9 @@ interface IJournal extends Document {
         isInfinite: boolean,
         visitsLeft?: number
     },
-    visitTime: Date
+    visitTime: {
+        type: Date
+    }
 }
 
 const journalSchema = new Schema({
@@ -31,9 +33,7 @@ const journalSchema = new Schema({
     isSub: Boolean,
     subInfo: subDbSchema,
     visitTime: {
-        type: Date,
-        default: Date.now(),
-        required: true
+        type: Date
     }
 }, {
     collection: 'Journal'

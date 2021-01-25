@@ -34,10 +34,10 @@ router.post('/saveSingleVisit', async (req, res) => {
     const client = await ClientDbModel.findById(singleVisitTyped.user)
     const visitInfo = await SingleVisitTypeDbModel.findById(singleVisitTyped.visitType)
 
-
     const singleJournalVisit = new VisitJournalDbModel({
         client,
         visitInfo,
+        visitTime: singleVisitTyped.visitTime,
         isSub: false
     });
 
@@ -46,6 +46,7 @@ router.post('/saveSingleVisit', async (req, res) => {
             res.sendStatus(200);
         })
         .catch(err => {
+            console.log(err);
             res.status(500).send(err);
         })
 

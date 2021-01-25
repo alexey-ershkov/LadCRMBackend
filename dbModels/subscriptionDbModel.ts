@@ -22,7 +22,7 @@ const subDbSchema = new Schema({
     client: clientSchema,
     uuid: {
         type: Number,
-        unique: true
+        unique: false
     },
     uuidStr: {
       type: String

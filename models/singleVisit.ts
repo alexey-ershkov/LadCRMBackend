@@ -1,4 +1,5 @@
 export default interface SingleVisit {
     user: string,
-    visitType: string
+    visitType: string,
+    visitTime: Date
 }
