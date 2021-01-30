@@ -60,15 +60,14 @@ router.post('/saveSubVisit', async (req, res) => {
 
     if (sub.visitsLeft === 0) {
         sub.isArchived = true;
-        sub.save()
-            .catch(err => {
-                console.log(err);
-            })
+
     }
 
+    const subPromise = sub.save();
 
+    const journalPromise = journalVisit.save();
 
-        journalVisit.save()
+    Promise.all([subPromise, journalPromise])
         .then(() => {
             res.sendStatus(200);
         })
@@ -111,6 +110,19 @@ router.post('/addSub', async (req, resp) => {
 router.get('/archive', async (req, res) => {
     const archived = await SubscriptionDbModel.find({'isArchived': true});
     res.send(archived);
+})
+
+router.post('/archiveSub', async  (req, resp) => {
+    const sub = await SubscriptionDbModel.findById(req.body.id);
+    sub.isArchived = !sub.isArchived;
+    sub.save()
+        .then(() => {
+            resp.sendStatus(200);
+        })
+        .catch(err => {
+            console.log(err);
+            resp.status(500).send(err);
+        })
 })
 
 export default router;
