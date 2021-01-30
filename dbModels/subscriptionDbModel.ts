@@ -20,13 +20,6 @@ interface ISub extends Document {
 const subDbSchema = new Schema({
     subInfo: SubTypeSchema,
     client: clientSchema,
-    uuid: {
-        type: Number,
-        unique: false
-    },
-    uuidStr: {
-      type: String
-    },
     isArchived: {
         type: Boolean,
         required: true,

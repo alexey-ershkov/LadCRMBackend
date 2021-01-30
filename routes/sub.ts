@@ -26,8 +26,6 @@ router.post('/sellSub', async (req, res) => {
     const sub = new SubscriptionDbModel({
         client,
         subInfo,
-        uuid: sellInfo.uuid,
-        uuidStr: sellInfo.uuid.toString(),
         dateFrom: Date.now(),
         dateTo: Date.now() + subInfo.daysCount * 24 * 60 * 60 * 1000,
         isInfinite: subInfo.isInfinite,
