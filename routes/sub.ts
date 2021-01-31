@@ -87,11 +87,6 @@ router.get('/sub/:id', async (req, res) => {
     res.send(sub);
 })
 
-router.get('/subs/search/:search', async (req, res) => {
-    const found = await SubscriptionDbModel.find({'uuidStr': new RegExp(req.params.search, 'ig'), 'isArchived': false});
-    res.send(found);
-})
-
 router.post('/addSub', async (req, resp) => {
     const sub = req.body;
     const dbSubType = new SubTypeDbModel(sub);

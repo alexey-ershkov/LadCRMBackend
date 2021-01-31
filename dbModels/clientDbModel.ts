@@ -1,4 +1,4 @@
-import {Schema, model} from 'mongoose'
+import {Schema, model, Types} from 'mongoose'
 
 const clientSchema = new Schema({
     name: String,
@@ -6,10 +6,7 @@ const clientSchema = new Schema({
     lastName: String,
     dateOfBirth: Date,
     isChild: Boolean,
-    parentName: String,
-    parentSurname: String,
-    parentLastName: String,
-    parentDateOfBirth: Date,
+    parentId: Types.ObjectId,
     uuid: Number,
     uuidStr: String,
     phone: String,
