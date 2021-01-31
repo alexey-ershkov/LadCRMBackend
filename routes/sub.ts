@@ -6,6 +6,7 @@ import {SubTypeDbModel} from "../dbModels/subTypeDbModel";
 import {SubscriptionDbModel} from '../dbModels/subscriptionDbModel'
 import SubVisit from "../models/subVisit";
 import VisitJournalDbModel from "../dbModels/visitJournalDbModel";
+import SubType from "../models/subType";
 
 
 const router = Router();
@@ -16,6 +17,11 @@ router.use(bodyParser.urlencoded({extended: true}))
 router.get('/subTypes', async (req, res) => {
     const subTypes = await SubTypeDbModel.find({});
     res.send(subTypes);
+})
+
+router.get('/getSubType/:id', async (req, res) => {
+    const typeInfo = await SubTypeDbModel.findById(req.params.id);
+    res.send(typeInfo);
 })
 
 router.post('/sellSub', async (req, res) => {
@@ -88,16 +94,21 @@ router.get('/sub/:id', async (req, res) => {
 })
 
 router.post('/addSub', async (req, resp) => {
-    const sub = req.body;
-    const dbSubType = new SubTypeDbModel(sub);
-    dbSubType.save().then(() => {
-        resp.sendStatus(200);
-    })
-        .catch(err => {
-            resp.send(err)
-            resp.status(500)
-        })
+    const sub: SubType = req.body;
 
+    if (sub._id) {
+        await SubTypeDbModel.findByIdAndUpdate(sub._id, sub);
+        resp.sendStatus(200);
+    } else {
+        const dbSubType = new SubTypeDbModel(sub);
+        dbSubType.save().then(() => {
+            resp.sendStatus(200);
+        })
+            .catch(err => {
+                resp.send(err)
+                resp.status(500)
+            })
+    }
 })
 
 router.get('/archive', async (req, res) => {
@@ -105,7 +116,7 @@ router.get('/archive', async (req, res) => {
     res.send(archived);
 })
 
-router.post('/archiveSub', async  (req, resp) => {
+router.post('/archiveSub', async (req, resp) => {
     const sub = await SubscriptionDbModel.findById(req.body.id);
     sub.isArchived = !sub.isArchived;
     sub.save()
