@@ -10,7 +10,7 @@ router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({extended: true}))
 
 router.get('/clients', async (req, res) => {
-    const clients = await ClientDbModel.find({});
+    const clients = await ClientDbModel.find({}).limit(10);
     res.send(clients);
 })
 
@@ -22,12 +22,12 @@ router.get('/client/:id', async (req, res) => {
 router.get('/clients/search/:search', async (req, res) => {
     const regex = new RegExp(req.params.search, 'ig');
 
-    const found = await ClientDbModel.find({$or: [{'name': regex}, {'surname': regex}, {'lastName': regex}]});
+    const found = await ClientDbModel.find({$or: [{'name': regex}, {'surname': regex}, {'lastName': regex}]}).limit(10);
     res.send(found);
 })
 
 router.get('/clients/searchUuid/:search', async (req, res) => {
-    const found = await ClientDbModel.find({'uuidStr': new RegExp(req.params.search, 'ig')});
+    const found = await ClientDbModel.find({'uuidStr': new RegExp(req.params.search, 'ig')}).limit(10);
     res.send(found);
 })
 
