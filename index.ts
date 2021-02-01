@@ -5,6 +5,10 @@ import {default as singleVisitRouter} from './routes/singleVisit';
 import {default as journalRouter} from './routes/journal';
 import {default as accountRouter} from './routes/account';
 import mongoose from 'mongoose';
+import cookieParser from "cookie-parser";
+import session from "express-session";
+import CryptoJS from "crypto-js/core";
+
 
 const app = express();
 const allowOrigin = process.env.ALLOW_URL;
@@ -26,6 +30,22 @@ app.use((req, res, next) => {
     }
 })
 
+
+app.use(cookieParser())
+app.use(session({
+    secret: new Date().toISOString(),
+    resave: false,
+    saveUninitialized: true
+}))
+
+app.use((req, res, next) => {
+    if (!req.session['isAuth'] && req.path != '/login') {
+        res.sendStatus(403);
+    } else {
+        next();
+    }
+})
+
 app.use(clientRouter);
 app.use(subRouter);
 app.use(singleVisitRouter);
@@ -36,7 +56,7 @@ const PORT = process.env.PORT || 3001;
 mongoose.connect(dbUrl, {
     useUnifiedTopology: true,
     useNewUrlParser: true,
-    useFindAndModify:false,
+    useFindAndModify: false,
     useCreateIndex: true
 }).then(() => app.listen(PORT, async () => {
     console.log(`Server started on  http://localhost:${PORT}`)
