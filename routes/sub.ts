@@ -8,6 +8,7 @@ import SubVisit from "../models/subVisit";
 import VisitJournalDbModel from "../dbModels/visitJournalDbModel";
 import SubType from "../models/subType";
 
+const limitVal = 7;
 
 const router = Router();
 
@@ -112,8 +113,17 @@ router.post('/addSub', async (req, resp) => {
 })
 
 router.get('/archive', async (req, res) => {
-    const archived = await SubscriptionDbModel.find({'isArchived': true});
-    res.send(archived);
+    const count = await SubscriptionDbModel.countDocuments({'isArchived': true});
+    const pages = Math.ceil(count / limitVal);
+    let currPage = Number(req.query ? req.query.page : 1);
+    if (currPage > pages) {
+        currPage = pages;
+    }
+    const archived = await SubscriptionDbModel.find({'isArchived': true})
+        .skip((currPage - 1) * limitVal).limit(limitVal);
+    res.send({pages, archived})
+
+
 })
 
 router.post('/archiveSub', async (req, resp) => {

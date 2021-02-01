@@ -7,8 +7,6 @@ import {default as accountRouter} from './routes/account';
 import mongoose from 'mongoose';
 import cookieParser from "cookie-parser";
 import session from "express-session";
-import CryptoJS from "crypto-js/core";
-
 
 const app = express();
 const allowOrigin = process.env.ALLOW_URL;
