@@ -19,7 +19,7 @@ router.get('/singleVisitTypes', async (req, res) => {
 
 router.post('/addSingleVisit', async (req, resp) => {
     const typeInfo = req.body as SingleVisitType;
-    console.log(typeInfo);
+
     if (typeInfo._id) {
         const obj = await SingleVisitTypeDbModel.findById(typeInfo._id)
         obj.visitName = typeInfo.visitName;

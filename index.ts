@@ -3,6 +3,7 @@ import {default as clientRouter} from './routes/client';
 import {default as subRouter} from './routes/sub';
 import {default as singleVisitRouter} from './routes/singleVisit';
 import {default as journalRouter} from './routes/journal';
+import {default as accountRouter} from './routes/account';
 import mongoose from 'mongoose';
 
 const app = express();
@@ -29,6 +30,7 @@ app.use(clientRouter);
 app.use(subRouter);
 app.use(singleVisitRouter);
 app.use(journalRouter);
+app.use(accountRouter);
 
 const PORT = process.env.PORT || 3001;
 mongoose.connect(dbUrl, {
