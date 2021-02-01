@@ -40,6 +40,12 @@ router.get('/clients/check/uuid/:uuid', async (req, res) => {
     }
 })
 
+router.post('/modifyClient', async (req, res) => {
+    let client = req.body as Client;
+    await ClientDbModel.findByIdAndUpdate(client._id, client);
+    res.sendStatus(200);
+})
+
 router.post('/addClient', async (req, resp) => {
     let client = req.body as Client
 
