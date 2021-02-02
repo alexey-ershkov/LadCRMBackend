@@ -45,6 +45,7 @@ app.use(session({
 
 app.use((req, res, next) => {
     if (!req.session['isAuth'] && req.path != '/login') {
+        console.log(req.session);
         res.sendStatus(403);
     } else {
         next();
