@@ -3,6 +3,7 @@ import bodyParser from "body-parser";
 import {AccountDbModel} from "../dbModels/accountDbModel";
 import Account from "../models/account";
 import {SessionDbModel} from "../dbModels/sessionDbModel";
+import CryptoJS from "crypto-js";
 
 const router = Router();
 
@@ -45,11 +46,14 @@ router.get('/account/:id', async (req, res) => {
 
 router.post('/login', async (req, res) => {
     const userInfo = req.body as Account;
-    const session = new SessionDbModel({'cookie': req.cookies['connect.sid']})
+    const hash = CryptoJS.MD5(new Date().toISOString()).toString();
+
+    res.cookie('lad',hash, { maxAge: 900000, httpOnly: true });
+
+    const session = new SessionDbModel({'cookie':hash})
     await session.save();
     const user = await AccountDbModel.find({'login': userInfo.login, 'password':userInfo.password});
     if (user.length !== 0) {
-        req.session['isAuth'] = true;
         res.sendStatus(200);
         return;
     }

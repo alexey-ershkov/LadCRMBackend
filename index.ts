@@ -33,20 +33,11 @@ app.use((req, res, next) => {
 
 
 app.use(cookieParser())
-app.use(session({
-    secret: new Date().toISOString(),
-    resave: false,
-    saveUninitialized: true,
-    proxy : true,
-    cookie : {
-        secure : true,
-        maxAge: 5184000000
-    }
-}))
+
 
 app.use(async (req, res, next) => {
 
-    const found = await SessionDbModel.find({'cookie':req.cookies['connect.sid']});
+    const found = await SessionDbModel.find({'cookie':req.cookies['lad']});
 
     if (req.path != '/login' && found.length === 0) {
         res.sendStatus(403);
