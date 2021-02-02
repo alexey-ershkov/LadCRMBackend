@@ -12,6 +12,8 @@ const app = express();
 const allowOrigin = process.env.ALLOW_URL;
 const dbUrl = process.env.MONGO_URL;
 
+app.enable('trust proxy');
+
 app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', allowOrigin);
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
