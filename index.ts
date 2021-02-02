@@ -40,6 +40,8 @@ app.use(session({
     resave: false,
     cookie: {
         secure:true,
+        httpOnly: true,
+        path:'/'
     }
 }))
 
