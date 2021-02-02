@@ -16,6 +16,9 @@ router.get('/journal', async (req, res) => {
     if (currPage > pages) {
         currPage = pages;
     }
+    if (currPage < 1) {
+        currPage = 1;
+    }
     const journal = await VisitJournalDbModel.find({}).sort({'visitTime': -1})
         .skip((currPage - 1) * limitVal).limit(limitVal);
     res.send({pages, journal})
