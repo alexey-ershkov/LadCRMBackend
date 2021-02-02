@@ -33,7 +33,12 @@ app.use(cookieParser())
 app.use(session({
     secret: new Date().toISOString(),
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: true,
+    proxy : true,
+    cookie : {
+        secure : true,
+        maxAge: 5184000000
+    }
 }))
 
 app.use((req, res, next) => {

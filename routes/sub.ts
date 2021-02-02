@@ -119,6 +119,9 @@ router.get('/archive', async (req, res) => {
     if (currPage > pages) {
         currPage = pages;
     }
+    if (currPage < 1) {
+        currPage = 1;
+    }
     const archived = await SubscriptionDbModel.find({'isArchived': true})
         .skip((currPage - 1) * limitVal).limit(limitVal);
     res.send({pages, archived})
