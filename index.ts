@@ -49,8 +49,7 @@ app.use(session({
 app.use(async (req, res, next) => {
     let found = []
     console.log(req.session);
-    console.log(req.cookies);
-    res.cookie("test", "value", {sameSite:false});
+    req.session['isAuth'] = true;
     // if (req.cookies['connect.sid']) {
     //     found = await SessionDbModel.find({'cookie': req.cookies['connect.sid']});
     // }
