@@ -13,7 +13,7 @@ const app = express();
 const allowOrigin = process.env.ALLOW_URL;
 const dbUrl = process.env.MONGO_URL;
 
-app.set('trust proxy', 1);
+app.enable('trust proxy');
 
 app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', allowOrigin);
@@ -48,7 +48,8 @@ app.use(session({
 app.use(async (req, res, next) => {
     let found = []
     console.log(req.session);
-    console.log(req.cookies)
+    console.log(req.cookies);
+    res.cookie("test", "value");
     // if (req.cookies['connect.sid']) {
     //     found = await SessionDbModel.find({'cookie': req.cookies['connect.sid']});
     // }
