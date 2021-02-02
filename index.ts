@@ -42,7 +42,9 @@ app.use(session({
     cookie: {
         secure:true,
         httpOnly: true,
-        sameSite: 'none'
+        sameSite: 'none',
+        expires: new Date(Date.now() + 1000 * 60 * 60 * 12),
+        maxAge: 1000*60*60*12,
     }
 }))
 
