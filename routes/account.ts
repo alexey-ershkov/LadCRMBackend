@@ -4,11 +4,13 @@ import {AccountDbModel} from "../dbModels/accountDbModel";
 import Account from "../models/account";
 import {SessionDbModel} from "../dbModels/sessionDbModel";
 import CryptoJS from "crypto-js";
+import cookieParser from "cookie-parser";
 
 const router = Router();
 
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({extended: true}));
+router.use(cookieParser('test'))
 
 router.post('/saveAccount', async (req, res) => {
     const accountInfo = req.body as Account;
@@ -48,7 +50,7 @@ router.post('/login', async (req, res) => {
     const userInfo = req.body as Account;
     const hash = CryptoJS.MD5(new Date().toISOString()).toString();
 
-    res.cookie('lad',hash, { maxAge: 900000, httpOnly: true });
+    res.cookie('lad',hash, { maxAge: 900000, httpOnly: true,  });
 
     const session = new SessionDbModel({'cookie':hash})
     await session.save();

@@ -5,7 +5,10 @@ interface ISession extends Document{
 }
 
 const sessionScheme = new Schema({
-    cookie:String
+    cookie:{
+        type: String,
+        required: true
+    }
 }, {collection: 'Sessions'});
 
 let SessionDbModel = model<ISession>('Sessions', sessionScheme)

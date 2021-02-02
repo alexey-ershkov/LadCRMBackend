@@ -13,7 +13,7 @@ const app = express();
 const allowOrigin = process.env.ALLOW_URL;
 const dbUrl = process.env.MONGO_URL;
 
-app.enable('trust proxy');
+app.set('trust proxy', 1);
 
 app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', allowOrigin);
@@ -32,7 +32,7 @@ app.use((req, res, next) => {
 })
 
 
-app.use(cookieParser())
+app.use(cookieParser('test'))
 
 
 app.use(async (req, res, next) => {
