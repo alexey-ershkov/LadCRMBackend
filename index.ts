@@ -37,10 +37,10 @@ app.use(session({
     resave: false,
     saveUninitialized: true,
     proxy : true,
-    // cookie : {
-    //     secure : true,
-    //     maxAge: 5184000000
-    // }
+    cookie : {
+        secure : true,
+        maxAge: 5184000000
+    }
 }))
 
 app.use((req, res, next) => {
