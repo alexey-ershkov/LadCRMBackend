@@ -38,6 +38,9 @@ app.use(session({
     secret: new Date().toISOString(),
     saveUninitialized: true,
     resave: false,
+    cookie: {
+        secure:true,
+    }
 }))
 
 app.use(async (req, res, next) => {
