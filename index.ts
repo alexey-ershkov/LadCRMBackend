@@ -38,15 +38,17 @@ app.use(session({
     secret: new Date().toISOString(),
     saveUninitialized: true,
     resave: false,
+    proxy:true,
     cookie: {
         secure:true,
         httpOnly: true,
-        path:'/'
     }
 }))
 
 app.use(async (req, res, next) => {
     let found = []
+    console.log(req.session);
+    console.log(req.cookies)
     if (req.cookies['connect.sid']) {
         found = await SessionDbModel.find({'cookie': req.cookies['connect.sid']});
     }
