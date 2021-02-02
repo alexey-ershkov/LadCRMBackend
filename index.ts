@@ -42,6 +42,7 @@ app.use(session({
     cookie: {
         secure:true,
         httpOnly: true,
+        sameSite: 'none'
     }
 }))
 
@@ -49,7 +50,7 @@ app.use(async (req, res, next) => {
     let found = []
     console.log(req.session);
     console.log(req.cookies);
-    res.cookie("test", "value", {sameSite:'none'});
+    res.cookie("test", "value", {sameSite:false});
     // if (req.cookies['connect.sid']) {
     //     found = await SessionDbModel.find({'cookie': req.cookies['connect.sid']});
     // }
