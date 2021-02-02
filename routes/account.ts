@@ -50,11 +50,15 @@ router.post('/login', async (req, res) => {
     const userInfo = req.body as Account;
     const hash = CryptoJS.MD5(new Date().toISOString()).toString();
 
-    res.cookie('lad',hash, { maxAge: 900000, httpOnly: true,  });
+    res.cookie('lad', hash, {
+        maxAge: 900000,
+        httpOnly: true,
+        secure: req.secure || req.headers['x-forwarded-proto'] === 'https'
+    });
 
-    const session = new SessionDbModel({'cookie':hash})
+    const session = new SessionDbModel({'cookie': hash})
     await session.save();
-    const user = await AccountDbModel.find({'login': userInfo.login, 'password':userInfo.password});
+    const user = await AccountDbModel.find({'login': userInfo.login, 'password': userInfo.password});
     if (user.length !== 0) {
         res.sendStatus(200);
         return;
