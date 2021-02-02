@@ -47,18 +47,11 @@ app.use(session({
 }))
 
 app.use(async (req, res, next) => {
-    let found = []
-    console.log(req.session);
-    req.session['isAuth'] = true;
-    // if (req.cookies['connect.sid']) {
-    //     found = await SessionDbModel.find({'cookie': req.cookies['connect.sid']});
-    // }
-    // if (req.path != '/login' && found.length === 0) {
-    //     res.sendStatus(403);
-    // } else {
-    //     next();
-    // }
-    next();
+    if (req.path != '/login' && !req.session['isAuth']) {
+        res.sendStatus(403);
+    } else {
+        next();
+    }
 })
 
 

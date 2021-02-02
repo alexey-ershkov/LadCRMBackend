@@ -49,15 +49,13 @@ router.get('/account/:id', async (req, res) => {
 router.post('/login', async (req, res) => {
     const userInfo = req.body as Account;
 
-    if (req.cookies['connect.sid']) {
-        const session = new SessionDbModel({'cookie': req.cookies['connect.sid']});
-        await session.save();
-        const user = await AccountDbModel.find({'login': userInfo.login, 'password': userInfo.password});
-        if (user.length !== 0) {
-            res.sendStatus(200);
-            return;
-        }
+    const user = await AccountDbModel.find({'login': userInfo.login, 'password': userInfo.password});
+    if (user.length !== 0) {
+        req.session['isAuth'] = true;
+        res.sendStatus(200);
+        return;
     }
+
     res.sendStatus(403);
 
 })
