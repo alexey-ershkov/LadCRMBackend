@@ -10,7 +10,7 @@ const router = Router();
 
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({extended: true}));
-router.use(cookieParser('test'))
+router.use(cookieParser())
 
 router.post('/saveAccount', async (req, res) => {
     const accountInfo = req.body as Account;
@@ -48,20 +48,15 @@ router.get('/account/:id', async (req, res) => {
 
 router.post('/login', async (req, res) => {
     const userInfo = req.body as Account;
-    const hash = CryptoJS.MD5(new Date().toISOString()).toString();
 
-    res.cookie('lad', hash, {
-        maxAge: 900000,
-        httpOnly: true,
-        secure: req.secure || req.headers['x-forwarded-proto'] === 'https'
-    });
-
-    const session = new SessionDbModel({'cookie': hash})
-    await session.save();
-    const user = await AccountDbModel.find({'login': userInfo.login, 'password': userInfo.password});
-    if (user.length !== 0) {
-        res.sendStatus(200);
-        return;
+    if (req.cookies['connect.sid']) {
+        const session = new SessionDbModel({'cookie': req.cookies['connect.sid']});
+        await session.save();
+        const user = await AccountDbModel.find({'login': userInfo.login, 'password': userInfo.password});
+        if (user.length !== 0) {
+            res.sendStatus(200);
+            return;
+        }
     }
     res.sendStatus(403);
 

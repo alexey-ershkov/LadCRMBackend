@@ -32,13 +32,19 @@ app.use((req, res, next) => {
 })
 
 
-app.use(cookieParser('test'))
+app.use(cookieParser())
 
+app.use(session({
+    secret: new Date().toISOString(),
+    saveUninitialized: true,
+    resave: false,
+}))
 
 app.use(async (req, res, next) => {
-
-    const found = await SessionDbModel.find({'cookie':req.cookies['lad']});
-
+    let found = []
+    if (req.cookies['connect.sid']) {
+        found = await SessionDbModel.find({'cookie': req.cookies['connect.sid']});
+    }
     if (req.path != '/login' && found.length === 0) {
         res.sendStatus(403);
     } else {
@@ -47,13 +53,11 @@ app.use(async (req, res, next) => {
 })
 
 
-
 app.use(clientRouter);
 app.use(subRouter);
 app.use(singleVisitRouter);
 app.use(journalRouter);
 app.use(accountRouter);
-
 
 
 const PORT = process.env.PORT || 3001;
@@ -64,8 +68,9 @@ mongoose.connect(dbUrl, {
     useCreateIndex: true
 }).then(() => {
     app.listen(PORT, async () => {
-    console.log(`Server started on  http://localhost:${PORT}`)
-})})
+        console.log(`Server started on  http://localhost:${PORT}`)
+    })
+})
     .catch(err => console.log(err))
 
 
