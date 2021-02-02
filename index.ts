@@ -37,10 +37,10 @@ app.use(session({
     resave: false,
     saveUninitialized: true,
     proxy : true,
-    cookie : {
-        secure : true,
-        maxAge: 5184000000
-    }
+    // cookie : {
+    //     secure : true,
+    //     maxAge: 5184000000
+    // }
 }))
 
 app.use((req, res, next) => {
@@ -48,6 +48,7 @@ app.use((req, res, next) => {
         console.log(req.session);
         res.sendStatus(403);
     } else {
+        console.log(req.session);
         next();
     }
 })
