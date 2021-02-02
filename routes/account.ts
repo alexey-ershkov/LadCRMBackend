@@ -2,6 +2,7 @@ import Router from "express";
 import bodyParser from "body-parser";
 import {AccountDbModel} from "../dbModels/accountDbModel";
 import Account from "../models/account";
+import {SessionDbModel} from "../dbModels/sessionDbModel";
 
 const router = Router();
 
@@ -44,6 +45,8 @@ router.get('/account/:id', async (req, res) => {
 
 router.post('/login', async (req, res) => {
     const userInfo = req.body as Account;
+    const session = new SessionDbModel({'cookie': req.cookies['connect.sid']})
+    await session.save();
     const user = await AccountDbModel.find({'login': userInfo.login, 'password':userInfo.password});
     if (user.length !== 0) {
         req.session['isAuth'] = true;

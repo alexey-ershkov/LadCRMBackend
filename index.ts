@@ -7,6 +7,7 @@ import {default as accountRouter} from './routes/account';
 import mongoose from 'mongoose';
 import cookieParser from "cookie-parser";
 import session from "express-session";
+import {SessionDbModel} from "./dbModels/sessionDbModel";
 
 const app = express();
 const allowOrigin = process.env.ALLOW_URL;
@@ -43,15 +44,18 @@ app.use(session({
     }
 }))
 
-app.use((req, res, next) => {
-    if (!req.session['isAuth'] && req.path != '/login') {
-        console.log(req.session);
+app.use(async (req, res, next) => {
+
+    const found = await SessionDbModel.find({'cookie':req.cookies['connect.sid']});
+
+    if (req.path != '/login' && found.length === 0) {
         res.sendStatus(403);
     } else {
-        console.log(req.session);
         next();
     }
 })
+
+
 
 app.use(clientRouter);
 app.use(subRouter);
@@ -59,15 +63,18 @@ app.use(singleVisitRouter);
 app.use(journalRouter);
 app.use(accountRouter);
 
+
+
 const PORT = process.env.PORT || 3001;
 mongoose.connect(dbUrl, {
     useUnifiedTopology: true,
     useNewUrlParser: true,
     useFindAndModify: false,
     useCreateIndex: true
-}).then(() => app.listen(PORT, async () => {
+}).then(() => {
+    app.listen(PORT, async () => {
     console.log(`Server started on  http://localhost:${PORT}`)
-}))
+})})
     .catch(err => console.log(err))
 
 
