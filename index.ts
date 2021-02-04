@@ -4,10 +4,11 @@ import {default as subRouter} from './routes/sub';
 import {default as singleVisitRouter} from './routes/singleVisit';
 import {default as journalRouter} from './routes/journal';
 import {default as accountRouter} from './routes/account';
+import {default as utilsRouter} from './routes/utils';
 import mongoose from 'mongoose';
 import cookieParser from "cookie-parser";
 import session from "express-session";
-import {SessionDbModel} from "./dbModels/sessionDbModel";
+
 
 const app = express();
 const allowOrigin = process.env.ALLOW_URL;
@@ -48,13 +49,13 @@ app.use(session({
     }
 }))
 
-// app.use(async (req, res, next) => {
-//     if (req.path != '/login' && !req.session['isAuth']) {
-//         res.sendStatus(403);
-//     } else {
-//         next();
-//     }
-// })
+app.use(async (req, res, next) => {
+    if (req.path != '/login' && req.path !='/ping' && !req.session['isAuth']) {
+        res.sendStatus(403);
+    } else {
+        next();
+    }
+})
 
 
 app.use(clientRouter);
@@ -62,6 +63,7 @@ app.use(subRouter);
 app.use(singleVisitRouter);
 app.use(journalRouter);
 app.use(accountRouter);
+app.use(utilsRouter);
 
 
 const PORT = process.env.PORT || 3001;

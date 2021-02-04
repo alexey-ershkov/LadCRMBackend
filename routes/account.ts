@@ -2,8 +2,6 @@ import Router from "express";
 import bodyParser from "body-parser";
 import {AccountDbModel} from "../dbModels/accountDbModel";
 import Account from "../models/account";
-import {SessionDbModel} from "../dbModels/sessionDbModel";
-import CryptoJS from "crypto-js";
 import cookieParser from "cookie-parser";
 
 const router = Router();
