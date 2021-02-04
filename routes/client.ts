@@ -40,6 +40,18 @@ router.get('/clients/check/uuid/:uuid', async (req, res) => {
     }
 })
 
+router.post('/addChild', async (req, res) => {
+    const childDb = new ClientDbModel(req.body);
+    childDb.save()
+        .then(() => {
+            res.send(childDb._id);
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).send(err);
+        })
+})
+
 router.post('/modifyClient', async (req, res) => {
     let client = req.body as Client;
     await ClientDbModel.findByIdAndUpdate(client._id, client);

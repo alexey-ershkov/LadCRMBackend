@@ -10,7 +10,7 @@ const clientSchema = new Schema({
     uuid: Number,
     uuidStr: String,
     phone: String,
-    orderNumber: Number,
+    orderNumber: String,
     created: Date
 }, {collection: 'Clients'})
 

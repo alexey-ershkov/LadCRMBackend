@@ -14,7 +14,8 @@ interface ISub extends Document {
     dateTo: Date,
     isArchived: boolean,
     isInfinite: boolean,
-    visitsLeft?: number
+    visitsLeft?: number,
+    lastVisited?: Date
 }
 
 const subDbSchema = new Schema({
@@ -34,7 +35,8 @@ const subDbSchema = new Schema({
         required: true
     },
     isInfinite: Boolean,
-    visitsLeft: Number
+    visitsLeft: Number,
+    lastVisited: Date
 
 }, {collection: 'Subscriptions'})
 

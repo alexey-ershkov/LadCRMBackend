@@ -15,6 +15,6 @@ export default interface Client {
     uuid: number,
     uuidStr: string
     phone: string;
-    orderNumber: number;
+    orderNumber: string;
     created: Date;
 }

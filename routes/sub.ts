@@ -63,10 +63,7 @@ router.post('/saveSubVisit', async (req, res) => {
         sub.visitsLeft -= 1;
     }
 
-    if (sub.visitsLeft === 0) {
-        sub.isArchived = true;
-
-    }
+    sub.lastVisited = visit.visitTime
 
     const subPromise = sub.save();
 
@@ -82,6 +79,22 @@ router.post('/saveSubVisit', async (req, res) => {
         })
 
 
+})
+
+router.post('/addVisitToSub/:id', async (req, res) => {
+    const sub = await SubscriptionDbModel.findById(req.params.id);
+    if (sub) {
+        sub.visitsLeft += 1;
+        sub.save().then(() => {
+            res.sendStatus(200);
+        })
+            .catch(err => {
+                console.log(err);
+                res.status(500).send(err);
+            })
+    } else {
+        res.sendStatus(404);
+    }
 })
 
 router.get('/getUserSubs/:id', async (req, res) => {
@@ -101,6 +114,7 @@ router.post('/addSub', async (req, resp) => {
         await SubTypeDbModel.findByIdAndUpdate(sub._id, sub);
         resp.sendStatus(200);
     } else {
+        sub.subName = sub.subName.trim();
         const dbSubType = new SubTypeDbModel(sub);
         dbSubType.save().then(() => {
             resp.sendStatus(200);
