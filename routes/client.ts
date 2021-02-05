@@ -20,10 +20,22 @@ router.get('/client/:id', async (req, res) => {
 })
 
 router.get('/clients/search/:search', async (req, res) => {
-    const regex = new RegExp(req.params.search, 'ig');
+    const word = req.params.search.split(' ')
+    if (word.length === 1) {
+        const regex = new RegExp(req.params.search, 'ig');
 
-    const found = await ClientDbModel.find({$or: [{'name': regex}, {'surname': regex}, {'lastName': regex}]}).limit(10);
-    res.send(found);
+        const found = await ClientDbModel.find({$or: [{'name': regex}, {'surname': regex}]}).limit(10);
+        res.send(found);
+    } else if (word.length === 2) {
+        const regexSurname = new RegExp(word[0], 'ig');
+        const regexName = new RegExp(word[1], 'ig');
+
+        const found = await ClientDbModel.find({'name': regexName,'surname': regexSurname}).limit(10);
+        res.send(found);
+    } else {
+        const found = await ClientDbModel.find({}).limit(10);
+        res.send(found);
+    }
 })
 
 router.get('/clients/searchUuid/:search', async (req, res) => {

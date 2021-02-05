@@ -1,4 +1,20 @@
-import {Schema, model, Types} from 'mongoose'
+import {Schema, model, Types, Document} from 'mongoose'
+import Client from "../models/client";
+import subType from "../models/subType";
+
+interface IClient extends Document {
+    name: string,
+    surname: string,
+    lastName: string,
+    dateOfBirth: Date,
+    isChild: boolean,
+    parentId: string,
+    uuid: number,
+    uuidStr: string,
+    phone: string,
+    orderNumber: string,
+    created: Date
+}
 
 const clientSchema = new Schema({
     name: String,
@@ -14,6 +30,6 @@ const clientSchema = new Schema({
     created: Date
 }, {collection: 'Clients'})
 
-let ClientDbModel = model('clientModel', clientSchema);
+let ClientDbModel = model<IClient>('clientModel', clientSchema);
 
 export {ClientDbModel, clientSchema}
