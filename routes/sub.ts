@@ -16,7 +16,7 @@ router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({extended: true}))
 
 router.get('/subTypes', async (req, res) => {
-    const subTypes = await SubTypeDbModel.find({});
+    const subTypes = await SubTypeDbModel.find({}).sort({'subName':1, 'visitsCount':1});
     res.send(subTypes);
 })
 
@@ -95,6 +95,27 @@ router.post('/addVisitToSub/:id', async (req, res) => {
     } else {
         res.sendStatus(404);
     }
+})
+
+router.post('/removeVisitFromSub/:id', async (req, res) => {
+    const sub = await SubscriptionDbModel.findById(req.params.id);
+    if (sub) {
+        sub.visitsLeft -= 1;
+        sub.save().then(() => {
+            res.sendStatus(200);
+        })
+            .catch(err => {
+                console.log(err);
+                res.status(500).send(err);
+            })
+    } else {
+        res.sendStatus(404);
+    }
+})
+
+router.delete('/subFromArchive/:id', async (req, res) => {
+    await SubscriptionDbModel.findByIdAndDelete(req.params.id);
+    res.sendStatus(200);
 })
 
 router.get('/getUserSubs/:id', async (req, res) => {
