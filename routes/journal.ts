@@ -1,6 +1,7 @@
 import Router from "express";
 import bodyParser from "body-parser";
 import VisitJournalDbModel from "../dbModels/visitJournalDbModel";
+import {ClientDbModel} from "../dbModels/clientDbModel";
 
 const router = Router();
 
@@ -25,25 +26,53 @@ router.get('/journal', async (req, res) => {
 })
 
 router.get('/journal/search/:search', async (req, res) => {
-    const searchRegExp = new RegExp(req.params.search, 'ig');
-    const count = await VisitJournalDbModel
-        .find({
-            $or: [{'client.name': searchRegExp}, {'client.surname': searchRegExp},
-                {'subInfo.client.name': searchRegExp}, {'subInfo.client.surname': searchRegExp},
-                {'subInfo.subInfo.subName': searchRegExp}]
-        }).countDocuments();
-    const pages = Math.ceil(count / limitVal);
-    let currPage = Number(req.query ? req.query.page : 1);
-    if (currPage > pages) {
-        currPage = pages;
+    const word = req.params.search.split(' ')
+    if (word.length !== 2) {
+        const searchRegExp = new RegExp(req.params.search, 'ig');
+        const count = await VisitJournalDbModel
+            .find({
+                $or: [{'client.name': searchRegExp}, {'client.surname': searchRegExp},
+                    {'subInfo.client.name': searchRegExp}, {'subInfo.client.surname': searchRegExp},
+                    {'subInfo.subInfo.subName': searchRegExp}]
+            }).countDocuments();
+        const pages = Math.ceil(count / limitVal);
+        let currPage = Number(req.query ? req.query.page : 1);
+        if (currPage > pages) {
+            currPage = pages;
+        }
+        const found = await VisitJournalDbModel
+            .find({
+                $or: [{'client.name': searchRegExp}, {'client.surname': searchRegExp},
+                    {'subInfo.client.name': searchRegExp}, {'subInfo.client.surname': searchRegExp},
+                    {'subInfo.subInfo.subName': searchRegExp}]
+            }).sort({'visitTime': -1}).skip((currPage - 1) * limitVal).limit(limitVal);
+        res.send({pages, found});
+
+    } else {
+        const searchRegexSurname = new RegExp(word[0], 'ig');
+        const searchRegexName = new RegExp(word[1], 'ig');
+
+
+        const count = await VisitJournalDbModel
+            .find({'name': searchRegexName, 'surname': searchRegexSurname}).countDocuments();
+        const pages = Math.ceil(count / limitVal);
+        let currPage = Number(req.query ? req.query.page : 1);
+        if (currPage > pages) {
+            currPage = pages;
+        }
+        const found = await VisitJournalDbModel
+            .find({
+                'name': searchRegexName,
+                'surname': searchRegexSurname
+            }).sort({'visitTime': -1}).skip((currPage - 1) * limitVal).limit(limitVal);
+        res.send({pages, found});
     }
-    const found = await VisitJournalDbModel
-        .find({
-            $or: [{'client.name': searchRegExp}, {'client.surname': searchRegExp},
-                {'subInfo.client.name': searchRegExp}, {'subInfo.client.surname': searchRegExp},
-                {'subInfo.subInfo.subName': searchRegExp}]
-        }).sort({'visitTime': -1}).skip((currPage - 1) * limitVal).limit(limitVal);
-    res.send({pages, found});
+
+})
+
+router.delete('/journal/:id', async (req, res) => {
+    await VisitJournalDbModel.findByIdAndDelete(req.params.id);
+    res.sendStatus(200);
 })
 
 export default router;
