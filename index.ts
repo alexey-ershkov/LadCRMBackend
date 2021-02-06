@@ -51,13 +51,13 @@ app.use(session({
     }
 }))
 
-// app.use(async (req, res, next) => {
-//     if (req.path != '/login' && req.path !='/ping' && !req.session['isAuth']) {
-//         res.sendStatus(403);
-//     } else {
-//         next();
-//     }
-// })
+app.use(async (req, res, next) => {
+    if (req.path != '/login' && req.path !='/ping' && !req.session['isAuth']) {
+        res.sendStatus(403);
+    } else {
+        next();
+    }
+})
 
 
 app.use(clientRouter);
