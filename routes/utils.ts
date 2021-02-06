@@ -12,4 +12,8 @@ router.get('/ping', (req, res) => {
     res.send('pong');
 })
 
+router.get('/checkAuth', (req, res) => {
+    res.sendStatus(200);
+})
+
 export default router;
