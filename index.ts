@@ -78,7 +78,7 @@ mongoose.connect(dbUrl, {
 
     setInterval(async () => {
         const currTimeHours = new Date().getHours();
-        if (currTimeHours === 12) {
+        if (currTimeHours === 21) {
             await backup();
         }
     }, 1000 * 60 * 60)
