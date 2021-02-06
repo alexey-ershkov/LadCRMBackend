@@ -8,6 +8,8 @@ import {default as utilsRouter} from './routes/utils';
 import mongoose from 'mongoose';
 import cookieParser from "cookie-parser";
 import session from "express-session";
+import backup from "./backup";
+
 
 
 const app = express();
@@ -39,23 +41,23 @@ app.use(session({
     secret: new Date().toISOString(),
     saveUninitialized: true,
     resave: false,
-    proxy:true,
+    proxy: true,
     cookie: {
-        secure:true,
+        secure: true,
         httpOnly: true,
         sameSite: 'none',
         expires: new Date(Date.now() + 1000 * 60 * 60 * 12),
-        maxAge: 1000*60*60*12,
+        maxAge: 1000 * 60 * 60 * 12,
     }
 }))
 
-app.use(async (req, res, next) => {
-    if (req.path != '/login' && req.path !='/ping' && !req.session['isAuth']) {
-        res.sendStatus(403);
-    } else {
-        next();
-    }
-})
+// app.use(async (req, res, next) => {
+//     if (req.path != '/login' && req.path !='/ping' && !req.session['isAuth']) {
+//         res.sendStatus(403);
+//     } else {
+//         next();
+//     }
+// })
 
 
 app.use(clientRouter);
@@ -73,8 +75,16 @@ mongoose.connect(dbUrl, {
     useFindAndModify: false,
     useCreateIndex: true
 }).then(() => {
+
+    setInterval(async () => {
+        const currTimeHours = new Date().getHours();
+        if (currTimeHours === 12) {
+            await backup();
+        }
+    }, 1000 * 60 * 60)
+
     app.listen(PORT, async () => {
-        console.log(`Server started on  http://localhost:${PORT}`)
+        console.log(`Server started on  http://localhost:${PORT}`);
     })
 })
     .catch(err => console.log(err))
