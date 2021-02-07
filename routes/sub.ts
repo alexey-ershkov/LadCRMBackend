@@ -8,7 +8,7 @@ import SubVisit from "../models/subVisit";
 import VisitJournalDbModel from "../dbModels/visitJournalDbModel";
 import SubType from "../models/subType";
 
-const limitVal = 7;
+const limitVal = 5;
 
 const router = Router();
 

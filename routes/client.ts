@@ -10,7 +10,10 @@ router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({extended: true}))
 
 router.get('/clients', async (req, res) => {
-    const clients = await ClientDbModel.find({}).limit(10);
+    const clients = await ClientDbModel.find({}).limit(10).sort({'orderNumber': -1}).collation({
+        locale: "en_US",
+        numericOrdering: true
+    })
     res.send(clients);
 })
 
@@ -30,7 +33,7 @@ router.get('/clients/search/:search', async (req, res) => {
         const regexSurname = new RegExp(word[0], 'ig');
         const regexName = new RegExp(word[1], 'ig');
 
-        const found = await ClientDbModel.find({'name': regexName,'surname': regexSurname}).limit(10);
+        const found = await ClientDbModel.find({'name': regexName, 'surname': regexSurname}).limit(10);
         res.send(found);
     } else {
         const found = await ClientDbModel.find({}).limit(10);
@@ -44,11 +47,11 @@ router.get('/clients/searchUuid/:search', async (req, res) => {
 })
 
 router.get('/clients/check/uuid/:uuid', async (req, res) => {
-    const found = await ClientDbModel.find({'uuidStr':req.params.uuid});
+    const found = await ClientDbModel.find({'uuidStr': req.params.uuid});
     if (found.length === 0) {
-        res.status(200).send({exists:false});
+        res.status(200).send({exists: false});
     } else {
-        res.status(200).send({exists:true});
+        res.status(200).send({exists: true});
     }
 })
 
