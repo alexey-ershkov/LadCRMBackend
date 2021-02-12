@@ -13,7 +13,7 @@ router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({extended: true}))
 
 router.get('/singleVisitTypes', async (req, res) => {
-    const visitTypes = await SingleVisitTypeDbModel.find({});
+    const visitTypes = await SingleVisitTypeDbModel.find({}).sort({'visitName':1});
     res.send(visitTypes);
 })
 

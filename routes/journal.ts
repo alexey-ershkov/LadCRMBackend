@@ -44,7 +44,7 @@ router.get('/journal/search/:search', async (req, res) => {
             .find({
                 $or: [{'client.name': searchRegExp}, {'client.surname': searchRegExp},
                     {'subInfo.client.name': searchRegExp}, {'subInfo.client.surname': searchRegExp},
-                    {'subInfo.subInfo.subName': searchRegExp}]
+                    {'subInfo.subInfo.subName': searchRegExp},{'visitInfo.visitName': searchRegExp}]
             }).sort({'visitTime': -1}).skip((currPage - 1) * limitVal).limit(limitVal);
         res.send({pages, found});
 
@@ -61,10 +61,13 @@ router.get('/journal/search/:search', async (req, res) => {
             currPage = pages;
         }
         const found = await VisitJournalDbModel
-            .find({
-                'name': searchRegexName,
-                'surname': searchRegexSurname
-            }).sort({'visitTime': -1}).skip((currPage - 1) * limitVal).limit(limitVal);
+            .find({$or: [{
+                    'client.name': searchRegexName,
+                    'client.surname': searchRegexSurname
+                }, {
+                    'subInfo.client.name': searchRegexName,
+                    'subInfo.client.surname': searchRegexSurname
+                }]}).sort({'visitTime': -1}).skip((currPage - 1) * limitVal).limit(limitVal);
         res.send({pages, found});
     }
 
